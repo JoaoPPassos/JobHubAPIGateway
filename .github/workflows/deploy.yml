@@ -44,7 +44,7 @@ jobs:
             HASH_TOKEN=${{ secrets.HASH_TOKEN }}
             INTERNAL_API_KEY=${{ secrets.INTERNAL_API_KEY }}
 
-            JOB_APPLY_SERVICE_URL=${{ vars.JOB_APPLY_SERVICE_URL }}
+            JOB_HUB_SERVICE_URL=${{ vars.JOB_HUB_SERVICE_URL }}
 
             THROTTLE_TTL=${{ vars.THROTTLE_TTL }}
             THROTTLE_LIMIT=${{ vars.THROTTLE_LIMIT }}

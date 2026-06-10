@@ -14,13 +14,13 @@ export class ProxyService {
     private readonly configService: ConfigService,
   ) {}
 
-  async forwardToJobApply(req: Request, res: Response): Promise<void> {
+  async forwardToJobHub(req: Request, res: Response): Promise<void> {
     const serviceUrl = this.configService.get<string>(
-      'services.jobApply.url',
+      'services.jobHub.url',
       'http://localhost:3000',
     );
     const timeoutMs = this.configService.get<number>(
-      'services.jobApply.timeout',
+      'services.jobHub.timeout',
       30000,
     );
 
@@ -127,7 +127,7 @@ export class ProxyService {
       }
 
       if (error.code === 'ECONNREFUSED') {
-        this.logger.error('JobApply service is unreachable (ECONNREFUSED)');
+        this.logger.error('JobHub service is unreachable (ECONNREFUSED)');
         res.status(503).json({
           statusCode: 503,
           message: 'Service temporarily unavailable',
@@ -137,7 +137,7 @@ export class ProxyService {
       }
 
       if (error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED') {
-        this.logger.error('JobApply service timed out');
+        this.logger.error('JobHub service timed out');
         res.status(504).json({
           statusCode: 504,
           message: 'Gateway timeout — upstream service did not respond in time',

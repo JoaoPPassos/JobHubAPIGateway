@@ -5,13 +5,13 @@ import { ApiKeyGuard } from '../../../common/guards/api-key.guard';
 import { ProxyService } from '../../../proxy/proxy.service';
 
 /**
- * Forwards all /job-apply/jobs/* requests to the JobApply Service.
+ * Forwards all /job-hub/jobs/* requests to the JobHub Service.
  * Protected by X-API-Key header — internal/worker-only endpoint.
  * Covers: PATCH /jobs/:id/metadata
  */
-@ApiTags('JobApply — Jobs (Internal)')
+@ApiTags('JobHub — Jobs (Internal)')
 @ApiSecurity('api-key')
-@Controller('job-apply/jobs')
+@Controller('job-hub/jobs')
 @UseGuards(ApiKeyGuard)
 export class JobsProxyController {
   constructor(private readonly proxyService: ProxyService) {}
@@ -23,11 +23,11 @@ export class JobsProxyController {
       '**Internal endpoint — requires `X-API-Key` header.**\n\n' +
       '| Method | Path | Description |\n' +
       '|--------|------|-------------|\n' +
-      '| PATCH | /job-apply/jobs/:id/metadata | Update job metadata (called by enrichment worker) |',
+      '| PATCH | /job-hub/jobs/:id/metadata | Update job metadata (called by enrichment worker) |',
   })
-  @ApiResponse({ status: 200, description: 'Forwarded response from JobApply Service' })
+  @ApiResponse({ status: 200, description: 'Forwarded response from JobHub Service' })
   @ApiResponse({ status: 401, description: 'Missing or invalid X-API-Key' })
   proxy(@Req() req: Request, @Res() res: Response): Promise<void> {
-    return this.proxyService.forwardToJobApply(req, res);
+    return this.proxyService.forwardToJobHub(req, res);
   }
 }

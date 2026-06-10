@@ -20,4 +20,4 @@ import { JobApplicationProxyController } from './controllers/job-application-pro
   ],
   providers: [JwtAuthGuard, ApiKeyGuard],
 })
-export class JobApplyModule {}
+export class JobHubModule {}

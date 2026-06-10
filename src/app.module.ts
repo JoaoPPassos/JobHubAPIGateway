@@ -8,7 +8,7 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { AuthModule } from './auth/auth.module';
 import { ProxyModule } from './proxy/proxy.module';
 import { HealthModule } from './health/health.module';
-import { JobApplyModule } from './modules/job-apply/job-apply.module';
+import { JobHubModule } from './modules/job-hub/job-hub.module';
 import { SwaggerProxyModule } from './swagger/swagger-proxy.module';
 
 @Module({
@@ -26,7 +26,7 @@ import { SwaggerProxyModule } from './swagger/swagger-proxy.module';
     AuthModule,
     ProxyModule,
     HealthModule,
-    JobApplyModule,
+    JobHubModule,
     SwaggerProxyModule,
   ],
   providers: [
