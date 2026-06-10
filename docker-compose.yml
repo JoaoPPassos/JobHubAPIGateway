@@ -1,0 +1,10 @@
+services:
+  app:
+    image: ghcr.io/joaoppassos/jobhub-api-gateway:latest
+    pull_policy: always
+    container_name: jobhub-api-gateway-app
+    restart: unless-stopped
+    ports:
+      - "${PORT:-4000}:4000"
+    env_file:
+      - .env

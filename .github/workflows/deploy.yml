@@ -1,0 +1,50 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/joaoppassos/jobhub-api-gateway:latest
+
+      - name: Deploy to Hostinger
+        uses: hostinger/deploy-on-vps@v2
+        with:
+          api-key: ${{ secrets.HOSTINGER_API_KEY }}
+          virtual-machine: ${{ vars.HOSTINGER_VM_ID }}
+          project-name: jobhub-api-gateway
+          personal-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          docker-compose-path: docker-compose.yml
+          environment-variables: |
+            NODE_ENV=production
+            PORT=4000
+            CORS_ORIGIN=${{ vars.CORS_ORIGIN }}
+            PROXY_TIMEOUT=${{ vars.PROXY_TIMEOUT }}
+
+            HASH_TOKEN=${{ secrets.HASH_TOKEN }}
+            INTERNAL_API_KEY=${{ secrets.INTERNAL_API_KEY }}
+
+            JOB_APPLY_SERVICE_URL=${{ vars.JOB_APPLY_SERVICE_URL }}
+
+            THROTTLE_TTL=${{ vars.THROTTLE_TTL }}
+            THROTTLE_LIMIT=${{ vars.THROTTLE_LIMIT }}
