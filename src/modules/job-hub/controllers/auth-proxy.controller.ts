@@ -5,12 +5,12 @@ import { Public } from '../../../common/decorators/public.decorator';
 import { ProxyService } from '../../../proxy/proxy.service';
 
 /**
- * Forwards all /job-hub/auth/* requests to the JobHub Service.
+ * Forwards all /auth/* requests to the JobHub Service.
  * No authentication required — signUp, login, refresh, and email confirmation
  * are all public endpoints.
  */
 @ApiTags('JobHub — Auth')
-@Controller('job-hub/auth')
+@Controller('auth')
 export class AuthProxyController {
   constructor(private readonly proxyService: ProxyService) {}
 
@@ -22,10 +22,10 @@ export class AuthProxyController {
       'Forwards requests to the JobHub Service.\n\n' +
       '| Method | Path | Description |\n' +
       '|--------|------|-------------|\n' +
-      '| POST | /job-hub/auth/signUp | Register user |\n' +
-      '| POST | /job-hub/auth/login | Login → access + refresh token |\n' +
-      '| POST | /job-hub/auth/refresh | Renew access token |\n' +
-      '| GET  | /job-hub/auth/confirm | Confirm email (returns HTML) |',
+      '| POST | /auth/signUp | Register user |\n' +
+      '| POST | /auth/login | Login → access + refresh token |\n' +
+      '| POST | /auth/refresh | Renew access token |\n' +
+      '| GET  | /auth/confirm | Confirm email (returns HTML) |',
   })
   @ApiResponse({ status: 200, description: 'Forwarded response from JobHub Service' })
   @ApiResponse({ status: 503, description: 'JobHub Service unavailable' })

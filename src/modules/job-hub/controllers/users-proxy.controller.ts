@@ -5,13 +5,13 @@ import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { ProxyService } from '../../../proxy/proxy.service';
 
 /**
- * Forwards all /job-hub/users/* requests to the JobHub Service.
+ * Forwards all /users/* requests to the JobHub Service.
  * Requires a valid JWT Bearer token.
  * Covers: GET /users/me, PATCH /users/email-credentials
  */
 @ApiTags('JobHub — Users')
 @ApiBearerAuth('Bearer')
-@Controller('job-hub/users')
+@Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersProxyController {
   constructor(private readonly proxyService: ProxyService) {}
@@ -23,8 +23,8 @@ export class UsersProxyController {
       'Forwards requests to the JobHub Service.\n\n' +
       '| Method | Path | Description |\n' +
       '|--------|------|-------------|\n' +
-      '| GET   | /job-hub/users/me | Authenticated user profile |\n' +
-      '| PATCH | /job-hub/users/email-credentials | Save IMAP password |',
+      '| GET   | /users/me | Authenticated user profile |\n' +
+      '| PATCH | /users/email-credentials | Save IMAP password |',
   })
   @ApiResponse({ status: 200, description: 'Forwarded response from JobHub Service' })
   @ApiResponse({ status: 401, description: 'Missing or invalid JWT' })

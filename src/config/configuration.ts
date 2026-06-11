@@ -17,7 +17,6 @@ export default () => ({
         name: 'JobHub Service',
         url: process.env.JOB_HUB_SERVICE_URL ?? 'http://localhost:3000',
         docsPath: '/api/docs-json',
-        pathPrefix: '/job-hub',
       },
     ],
   },

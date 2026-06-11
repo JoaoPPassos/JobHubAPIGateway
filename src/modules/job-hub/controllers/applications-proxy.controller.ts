@@ -5,26 +5,26 @@ import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { ProxyService } from '../../../proxy/proxy.service';
 
 /**
- * Forwards all /job-hub/applications requests to the JobHub Service.
+ * Forwards all /applications requests to the JobHub Service.
  * Requires a valid JWT Bearer token.
  * Covers: GET, POST /applications | GET, PATCH, DELETE /applications/:id
  */
 @ApiTags('JobHub — Applications')
 @ApiBearerAuth('Bearer')
-@Controller('job-hub/applications')
+@Controller('applications')
 @UseGuards(JwtAuthGuard)
 export class ApplicationsProxyController {
   constructor(private readonly proxyService: ProxyService) {}
 
-  // Matches /job-hub/applications (list + create)
+  // Matches /applications (list + create)
   @All()
   @ApiOperation({
     summary: 'Applications proxy — list & create',
     description:
       '| Method | Path | Description |\n' +
       '|--------|------|-------------|\n' +
-      '| GET  | /job-hub/applications | List (filters: user_id, job_id, status) |\n' +
-      '| POST | /job-hub/applications | Create application |',
+      '| GET  | /applications | List (filters: user_id, job_id, status) |\n' +
+      '| POST | /applications | Create application |',
   })
   @ApiResponse({ status: 200, description: 'Forwarded response from JobHub Service' })
   @ApiResponse({ status: 401, description: 'Missing or invalid JWT' })
@@ -32,16 +32,16 @@ export class ApplicationsProxyController {
     return this.proxyService.forwardToJobHub(req, res);
   }
 
-  // Matches /job-hub/applications/:id
+  // Matches /applications/:id
   @All('*')
   @ApiOperation({
     summary: 'Applications proxy — single resource',
     description:
       '| Method | Path | Description |\n' +
       '|--------|------|-------------|\n' +
-      '| GET    | /job-hub/applications/:id | Fetch by UUID |\n' +
-      '| PATCH  | /job-hub/applications/:id | Update |\n' +
-      '| DELETE | /job-hub/applications/:id | Remove |',
+      '| GET    | /applications/:id | Fetch by UUID |\n' +
+      '| PATCH  | /applications/:id | Update |\n' +
+      '| DELETE | /applications/:id | Remove |',
   })
   @ApiResponse({ status: 200, description: 'Forwarded response from JobHub Service' })
   @ApiResponse({ status: 401, description: 'Missing or invalid JWT' })
