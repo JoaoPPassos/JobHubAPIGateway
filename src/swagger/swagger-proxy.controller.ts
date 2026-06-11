@@ -4,7 +4,9 @@ import {
   Param,
   Header,
   NotFoundException,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
@@ -15,6 +17,7 @@ interface SwaggerServiceConfig {
   name: string;
   url: string;
   docsPath: string;
+  pathPrefix?: string;
 }
 
 @Controller('api')
@@ -50,12 +53,12 @@ export class SwaggerProxyController {
   }
 
   /**
-   * Proxies the OpenAPI spec from the named service without rewriting servers,
-   * so "Try it out" hits the service directly.
+   * Proxies the OpenAPI spec from the named service, rewriting servers and
+   * paths so "Try it out" routes through the gateway with the correct prefix.
    */
   @Public()
   @Get('docs-json/:service')
-  async getSpec(@Param('service') serviceKey: string) {
+  async getSpec(@Param('service') serviceKey: string, @Req() req: Request) {
     const services =
       this.configService.get<SwaggerServiceConfig[]>('swagger.services') ?? [];
     const svc = services.find((s) => s.key === serviceKey);
@@ -67,6 +70,21 @@ export class SwaggerProxyController {
     const { data } = await firstValueFrom(
       this.httpService.get(`${svc.url}${svc.docsPath}`, { timeout: 5000 }),
     );
+
+    if (!svc.pathPrefix) {
+      return data;
+    }
+
+    const gatewayUrl = `${req.protocol}://${req.get('host')}`;
+    data.servers = [{ url: gatewayUrl }];
+
+    if (data.paths) {
+      const prefixed: Record<string, unknown> = {};
+      for (const [path, value] of Object.entries(data.paths)) {
+        prefixed[`${svc.pathPrefix}${path}`] = value;
+      }
+      data.paths = prefixed;
+    }
 
     return data;
   }
