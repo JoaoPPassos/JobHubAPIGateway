@@ -75,7 +75,8 @@ export class SwaggerProxyController {
       return data;
     }
 
-    const gatewayUrl = `${req.protocol}://${req.get('host')}`;
+    const proto = req.get('x-forwarded-proto') ?? req.protocol;
+    const gatewayUrl = `${proto}://${req.get('host')}`;
     data.servers = [{ url: gatewayUrl }];
 
     if (data.paths) {
